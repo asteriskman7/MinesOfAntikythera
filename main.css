@@ -3,7 +3,77 @@
   . => class
 */
 
+* {
+  font-family: 'VT323', monospace;
+  font-size: 16pt;
+}
+
 body {
   background-color: #38352f;
   color: #fcffe7;
+}
+
+#div_automaton_container {
+  display: none;
+  width: 512px;
+  height: 64px;
+  border: 2px solid black;
+}
+
+#div_code {
+  display: none;
+}
+
+#div_level_select {
+  display: none;
+}
+
+#div_modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 99999;
+  opacity: 0;
+  -webkit-transition: opacity 400ms ease-in;
+  -moz-transition: opacity 400ms ease-in;
+  transition: opacity 400ms ease-in;
+  pointer-events: none;
+}
+
+#div_modal_box {
+  width: 400px;
+  position: relative;
+  margin: 10% auto;
+  padding: 5px 20px 13px 20px;
+  border-radius: 2px;
+  background: #fcffe7;
+  pointer-events: auto;
+}
+
+#div_modal_content {
+  color: #38352f;
+}
+
+#div_level_display {
+  border: #000000 2px solid;
+  width: 512px;
+  height: 512px;
+}
+
+#button_l0_press {
+  position: relative;
+  top: 64px;
+  left: 64px;
+  width: 384px;
+  height: 384px;
+  font-size: 32pt;
+}
+
+.div_automaton {
+  width: 64px;
+  height: 64px;
+  display: inline-block;
 }

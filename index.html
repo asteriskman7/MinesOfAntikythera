@@ -4,13 +4,24 @@
     <meta charset='utf-8'>
     <title>Mines of Antikythera</title>
     <!-- <link rel='shortcut icon' href='./favicon.ico'> -->
+    <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
     <link rel='stylesheet' type='text/css' href='./main.css'>
   </head>
   <body>
     <div id='div_player'>Player info</div>
-    <div id='div_automatons'>Automaton info</div>
+    <div id='div_automaton_container'>
+      <!-- must end div on next line to avoid white space between divs which throws off spacing -->
+      <div class='div_automaton' id='div_automaton_0'>0
+      </div><div class='div_automaton' id='div_automaton_1'>1
+      </div><div class='div_automaton' id='div_automaton_2'>2
+      </div><div class='div_automaton' id='div_automaton_3'>3
+      </div><div class='div_automaton' id='div_automaton_4'>4
+      </div><div class='div_automaton' id='div_automaton_5'>5
+      </div><div class='div_automaton' id='div_automaton_6'>6
+      </div><div class='div_automaton' id='div_automaton_7'>7</div>            
+    </div>
     <div id='div_code'>Code entry</div>
-    <div id='div_level'>Level display
+    <div id='div_level'>
       <div id='div_level_select'>Level select
         <button type='button' id='button_level_0'>Level 0</button>
         <button type='button' id='button_level_1'>Level 1</button>
@@ -18,6 +29,14 @@
       <div id='div_level_number'>Level ?</div>
       <div id='div_level_display'>Level display</div>
     </div>
+    <div id='div_modal'>
+      <div id='div_modal_box'>
+        <button type='button' id='button_modal_close'>X</button>
+        <div id='div_modal_content'></div>
+      </div>
+    </div>
+    <button type='button' onclick='main.resetState();'>RESET</button>
+    <script src='./automatons.js'></script>
     <script src='./levels.js'></script>
     <script src='./main.js'></script>
   </body>

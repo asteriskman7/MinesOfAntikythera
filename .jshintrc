@@ -1,0 +1,6 @@
+{
+  "strict": "global",
+  "browser": true,
+  "devel": true,
+  "loopfunc": true
+}
