@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals main, blocks */
+/* globals main, blockTypes */
 
 function Level(blocks) {
   this.state = {};
