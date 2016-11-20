@@ -9,10 +9,12 @@ var main = {
   ePlayerDiv: undefined,
   automatons: [],
   maxAutomatons: 8,
+  currencyRatio: 1000,
+  currencyCount: 3,
   init: function() {
     var i;
     var eAutomatonDiv;
-    var automatonPrices = [10, 100, 200, 300, 400, 500, 600, 700];
+    var automatonPrices = [[10], [100], [200], [300], [400], [500], [600], [700]];
     console.log('init');
     
     main.eLevelDisplayDiv = document.getElementById('div_level_display');
@@ -47,15 +49,21 @@ var main = {
     var i;
     main.state = {
       firstPlay: true,
-      currency: [0],
+      currency: [],
       code: [],
       curLevel: 0,
       levelStates: [],
       unfoldLevel: 0,
       automatons: [],
     };
+    for (i = 0; i < main.currencyCount; i++) {
+      main.state.currency.push(0);
+    }
     for (i = 0; i < main.maxAutomatons; i++) {
       main.state.automatons[i] = initAutomatonState();
+      if (main.automatons[i] !== undefined) {
+        main.automatons[i].state = main.state.automatons[i];
+      }
     }
   },
   loadState: function() {
@@ -110,7 +118,22 @@ var main = {
     });
   },
   updateDisplay: function(deltaTime) {
-    main.ePlayerDiv.innerHTML = 'Currency: ' + main.state.currency[0];
+    var currencyHTML = '';
+    var i;
+    var currencyStart = false;
+    for (i = main.currencyCount - 1; i >= 0; i--) {
+      currencyStart =main.state.currency[i] > 0;
+      if (currencyStart) {
+        currencyHTML += main.state.currency[i] + 'x' + i + ' ';        
+      }
+    }
+    if (!currencyStart) {
+      currencyHTML += '0x0';
+    }
+    
+    currencyHTML = 'Currency: ' + currencyHTML;
+    main.ePlayerDiv.innerHTML = currencyHTML;
+    
     levels[main.state.curLevel].draw(main.eLevelDisplayDiv);
     main.automatons.forEach(function(v) {
       v.draw();
@@ -125,12 +148,52 @@ var main = {
   },
   addCurrency: function(type, quantity) {
     main.state.currency[type] += quantity;
+    main.state.currency = main.normalizeCurrency(main.state.currency);
     if (main.state.currency[0] >= 10 && main.state.unfoldLevel < 1) {
       main.state.unfoldLevel = 1;
       main.unfold(main.state.unfoldLevel);
-      main.showModal('Wow, mining is pretty tiring work. Good thing we (the Antikytherans) have automatons to help us. Try purchasing an automaton by double clicking.');
+      main.showModal('Wow, mining is pretty tiring work. Good thing we (the Antikytherans) have automatons to help us. Try purchasing an automaton by clicking it.');
       levels[0].active = true;
+    }    
+  },
+  checkCurrency: function(checkValues) {
+    //return true if there is at least currency equal to checkValues currency available
+    var i;
+    var newCurrency = [];
+    for (i = 0; i < main.currencyCount; i++) {
+      if (checkValues[i] !== undefined) {
+        newCurrency.push(main.state.currency[i] - checkValues[i]);
+      } else {
+        newCurrency.push(main.state.currency[i]);
+      }
     }
+    var normVal = main.normalizeCurrency(newCurrency);
+    return normVal[main.currencyCount - 1] >= 0;
+  },
+  spendCurrency: function(spendValues) {
+    spendValues.forEach(function(v,i) {
+      main.state.currency[i] -= v;
+    });
+    main.state.currency = main.normalizeCurrency(main.state.currency);
+  },
+  normalizeCurrency: function(currency) {
+    var normCurrency = currency.slice(); //copy currency
+    var i;
+    //don't normalize the highest currency because you can't carry from it or borrow to it
+    for (i = 0; i < normCurrency.length - 1; i++) {
+
+      while (normCurrency[i] > main.currencyRatio) {
+        normCurrency[i+1] += 1;
+        normCurrency[i] -= main.currencyRatio;
+      }
+
+      while (normCurrency[i] < 0) {  
+        normCurrency[i+1] -= 1;
+        normCurrency[i] += main.currencyRatio;
+      }
+
+    }
+    return normCurrency;
   },
   showModal: function(html) {
     var eModal = document.getElementById('div_modal');
@@ -173,7 +236,15 @@ var main = {
     /* jshint +W086 */
   },
   selectAutomaton: function(automatonIndex) {
-    console.log('sa ' + automatonIndex); 
+    var automaton = main.automatons[automatonIndex];
+    console.log('sa ' + automatonIndex);
+    if (automaton.state.purchased) {
+    } else {
+      if (main.checkCurrency(automaton.price)) {
+        main.spendCurrency(automaton.price);
+        automaton.state.purchased = true;
+      }
+    }
   },
 };
 
