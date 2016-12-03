@@ -239,6 +239,7 @@ var main = {
     var automaton = main.automatons[automatonIndex];
     console.log('sa ' + automatonIndex);
     if (automaton.state.purchased) {
+      automaton.select();
     } else {
       if (main.checkCurrency(automaton.price)) {
         main.spendCurrency(automaton.price);

@@ -22,4 +22,9 @@ BlockWall.prototype = Object.create(Block.prototype);
 BlockWall.prototype.constructor = BlockWall;
 blockTypes.wall = BlockWall;
 
-
+function BlockStart() {
+  Block.call(this);
+}
+BlockStart.prototype = Object.create(Block.prototype);
+BlockStart.prototype.constructor = BlockStart;
+blockTypes.start = BlockStart;

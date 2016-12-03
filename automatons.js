@@ -1,5 +1,7 @@
 'use strict';
 
+/* globals main, levels */
+
 function Automaton(state, div, price) {
   this.state = state;
   this.div = div;
@@ -8,6 +10,16 @@ function Automaton(state, div, price) {
 
 Automaton.prototype.purchase = function() {
   this.state.purchased = true;
+};
+Automaton.prototype.select = function() {
+  var level = levels[main.state.curLevel];
+  var startPos = level.startPos;
+  this.state = initAutomatonState();
+  this.state.purchased = true;
+  if (startPos !== undefined) {
+    this.state.level = main.state.curLevel;
+    this.state.pos = startPos;
+  }
 };
 Automaton.prototype.update = function(deltaTime) {};
 Automaton.prototype.draw = function() {
@@ -18,9 +30,12 @@ Automaton.prototype.draw = function() {
   }
 };
 
+
 function initAutomatonState() {
   return {
-    purchased: false
+    purchased: false,
+    level: -1,
+    pos: undefined
   };
 }
 
